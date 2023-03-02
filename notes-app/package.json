@@ -1,0 +1,29 @@
+{
+  "name": "notes-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "babel-core": "^6.26.0",
+  "babel-loader": "^7.1.4",
+  "babel-plugin-source-map-support": "^1.0.0",
+  "babel-plugin-transform-runtime": "^6.23.0",
+  "babel-preset-env": "^1.6.1",
+  "babel-preset-stage-3": "^6.24.1",
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@babel/core": "^7.20.12",
+    "chalk": "^5.2.0",
+    "express": "^4.18.2",
+    "force": "^0.0.3",
+    "validator": "^13.9.0",
+    "yargs": "^17.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
