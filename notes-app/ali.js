@@ -11,4 +11,4 @@ app.get("/getNotes", async function (req, res) {
   res.status(200).send(notes);
 });
 
-app.listen(3000);
+app.listen(3006);
