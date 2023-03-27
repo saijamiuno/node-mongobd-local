@@ -4,7 +4,6 @@ const MongoClient = require("mongodb").MongoClient;
 mongoose = require("mongoose");
 const app = express();
 app.use(express.json());
-// var ObjectId = require('mongodb').ObjectId;
 
 async function getResponseToMongoDB() {
   const client = await MongoClient.connect("mongodb://127.0.0.1:27017/", {
