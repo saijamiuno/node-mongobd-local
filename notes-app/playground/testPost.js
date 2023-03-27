@@ -1,17 +1,50 @@
 const express = require("express");
-mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const mongodb = require("mongodb");
 
+mongoose = require("mongoose");
 const app = express();
 app.use(express.json());
+var ObjectId = require('mongodb').ObjectId;
 
-const url = "mongodb://127.0.0.1:27017/";
-const dbName = "CRUD";
+async function saveResponseToMongoDB(dataJson) {
+  const client = await MongoClient.connect("mongodb://127.0.0.1:27017/", {
+    useNewUrlParser: true,
+  });
+  const db = client.db("CRUD");
+  try {
+    const result = await db.collection("dataJson").insertOne(dataJson);
+    console.log(`Saved response with ID: ${result.insertedId}`);
+  } catch (err) {
+    console.error(`Error saving response: ${err}`);
+  } finally {
+    client.close();
+  }
+}
 
-const query = {
-  _id: "6405e1019f98a127e6e3f837",
-};
+async function getResponseToMongoDB() {
+  const client = await MongoClient.connect("mongodb://127.0.0.1:27017/", {
+    useNewUrlParser: true,
+  });
+  const db = client.db("CRUD");
+  try {
+    const result = await db.collection("dataJson").find({});
+    const users = [];
+    await result.forEach(doc => {
+      users.push(doc);
+    });
+    return users;
+  } catch (err) {
+    console.error(`Error saving response: ${err}`);
+  } finally {
+    client.close();
+  }
+}
+
+app.get("/get", async (req, res) => {
+  const users = await getResponseToMongoDB();
+  res.status(200).json(users);
+});
+
 
 app.post("/post", (req, res) => {
   console.log(req.body);
@@ -19,38 +52,22 @@ app.post("/post", (req, res) => {
   console.log(dataJson);
   saveResponseToMongoDB(dataJson);
   res.status(200).json(dataJson);
-
-  async function saveResponseToMongoDB(dataJson) {
-    const client = await MongoClient.connect("mongodb://127.0.0.1:27017/", {
-      useNewUrlParser: true,
-    });
-    const db = client.db("CRUD");
-
-    try {
-      const result = await db.collection("dataJson").insertOne(dataJson);
-      console.log(`Saved response with ID: ${result.insertedId}`);
-    } catch (err) {
-      console.error(`Error saving response: ${err}`);
-    } finally {
-      client.close();
-    }
-  }
 });
 
-app.get("/get", (req, res) => {
-  res.status(200).send(getDocument());
 
-  async function getDocument(CRUD, query) {
-    const client = await db.dataJson.find({
-      _id: "6405e1019f98a127e6e3f837",
-    });
-    const db = client.db(dbName);
-    const collection = db.collection("dataJson");
-    const documents = await collection.find(query).toArray();
-    // client.close();
+async function getUserById(id) {
+  const client = await MongoClient.connect("mongodb://127.0.0.1:27017/", {
+    useNewUrlParser: true,
+  });
+  const db = client.db("CRUD");
+  const collection = db.collection('dataJson');
+  const user = await collection.findOne({ _id: new ObjectId(id) });
+  return user;
+}
 
-    return documents;
-  }
+app.get('/get/:id', async (req, res) => {
+  const user = await getUserById(req.params.id);
+  res.status(200).json(user);
 });
 
 app.listen(3006, () => {
