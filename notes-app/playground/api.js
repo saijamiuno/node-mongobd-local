@@ -1,16 +1,15 @@
 const express = require("express");
 const { ObjectId } = require("mongodb");
+const { connection } = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
+const uri = "mongodb://127.0.0.1:27017/";
+const client = new MongoClient(uri, { useNewUrlParser: true });
 mongoose = require("mongoose");
 
 const app = express();
 app.use(express.json());
 
 async function savetoDb(dataJson) {
-  const client = await MongoClient.connect("mongodb://127.0.0.1:27017", {
-    useNewUrlParser: true,
-  });
-
   const db = client.db("CRUD");
   try {
     const result = await db.collection("dataJson").insertOne(dataJson);
@@ -49,6 +48,7 @@ async function getData() {
     client.close();
   }
 }
+
 app.get("/getUserDetails", async (req, res) => {
   const users = await getData();
   res.status(200).json(users);
@@ -65,6 +65,29 @@ async function getUserById(id) {
 app.get("/getUserDetails/:id", async (req, res) => {
   const user = await getUserById(req.params.id);
   res.status(200).json(user);
+});
+
+async function updateUserById(id, update) {
+  const connection = await client.connect();
+  const db = connection.db("CRUD");
+  const collection = db.collection("dataJson");
+  const result = await collection.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: update }
+  );
+  connection.close();
+  return result.modifiedCount > 0;
+}
+
+app.put("/getUserDetails/:id", async (req, res) => {
+  const id = req.params.id;
+  const update = req.body;
+  const success = await updateUserById(id, update);
+  if (success) {
+    res.json({ message: "User updated successfully" });
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
 });
 
 app.listen(3006, () => {
