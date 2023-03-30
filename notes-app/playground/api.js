@@ -79,12 +79,31 @@ async function updateUserById(id, update) {
   return result.modifiedCount > 0;
 }
 
-app.put("/getUserDetails/:id", async (req, res) => {
+app.put("/updateUserDetails/:id", async (req, res) => {
   const id = req.params.id;
   const update = req.body;
   const success = await updateUserById(id, update);
   if (success) {
     res.json({ message: "User updated successfully" });
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
+});
+
+async function deleteUserById(id) {
+  const connection = await client.connect();
+  const db = connection.db("CRUD");
+  const collection = db.collection("dataJson");
+  const result = await collection.deleteOne({ _id: new ObjectId(id) });
+  connection.close();
+  return result.deletedCount > 0;
+}
+
+app.delete("/deleteUserDetails/:id", async (req, res) => {
+  const id = req.params.id;
+  const success = await deleteUserById(id);
+  if (success) {
+    res.json({ message: "User Deleted Successfully" });
   } else {
     res.status(404).json({ message: "User not found" });
   }
