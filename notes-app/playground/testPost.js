@@ -1,18 +1,9 @@
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
-const router = express.Router();
-const axios = require("axios");
-const url = "http://localhost:5000/post";
+
 mongoose = require("mongoose");
 const app = express();
 app.use(express.json());
-
-function createPost(data) {
-  return axios
-    .post(url, data)
-    .then((response) => response.data)
-    .catch((error) => console.log(error));
-}
 
 async function saveResponseToMongoDB(dataJson) {
   const client = await MongoClient.connect("mongodb://127.0.0.1:27017/", {
