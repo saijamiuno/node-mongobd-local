@@ -1,10 +1,18 @@
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
-
+const router = express.Router();
+const axios = require("axios");
+const url = "http://localhost:5000/post";
 mongoose = require("mongoose");
 const app = express();
 app.use(express.json());
 
+function createPost(data) {
+  return axios
+    .post(url, data)
+    .then((response) => response.data)
+    .catch((error) => console.log(error));
+}
 
 async function saveResponseToMongoDB(dataJson) {
   const client = await MongoClient.connect("mongodb://127.0.0.1:27017/", {
@@ -22,13 +30,13 @@ async function saveResponseToMongoDB(dataJson) {
 }
 
 app.post("/post", (req, res) => {
-  console.log(req.body);
+  console.log(req.body, "req.body");
   let dataJson = JSON.parse(JSON.stringify(req.body));
-  console.log(dataJson);
+  console.log(dataJson, "dataJson");
   saveResponseToMongoDB(dataJson);
   res.status(200).json(dataJson);
 });
 
-app.listen(3006, () => {
-  console.log("Server is running on port 3006");
+app.listen(5000, () => {
+  console.log("Server is running on port 5000");
 });

@@ -24,7 +24,9 @@ async function savetoDb(dataJson) {
 app.post("/addForm", (req, res) => {
   console.log(req.body, "req.body");
   let dataJson = JSON.parse(JSON.stringify(req.body));
+  dataJson = dataJson["entityData"]
   console.log(dataJson, "dataJson");
+  return
   savetoDb(dataJson);
   res.status(200).json(dataJson);
 });
@@ -109,6 +111,6 @@ app.delete("/deleteUserDetails/:id", async (req, res) => {
   }
 });
 
-app.listen(3006, () => {
-  console.log("Server Running on Port 3006");
+app.listen(3000, () => {
+  console.log("Server Running on Port 3000");
 });
