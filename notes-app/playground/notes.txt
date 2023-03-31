@@ -1,0 +1,20 @@
+Queries 
+    - using find method of MongoDb with Operators
+    - Eq 
+    - lt - less than
+    - lte - less than equal
+    - gt - greater than 
+    -gte - greater than equal 
+    - $and
+    - $or
+1.Find () - return all the documetns in the collection 
+2.Find with conditions eg :  db.dataJson.find({"age" : "60" })
+3.Find method with multiple conditions db.dataJson.find({"age" : "82", "name" : "post" })
+4.Find method with age less than 30  db.dataJson.find({"age" : {$lt : "30"} })
+5.Find method with age greater than 30  db.dataJson.find({"age" : {$gt : "30"} })
+6.Find method with age equalto 30  db.dataJson.find({"age" :  "30" })
+7. And Operator Find method   db.dataJson.find({$and : [{"age":"82"},{"name" : "post"}]})
+8. Or Operator Find method   db.dataJson.find({$or : [{"age":"82"},{"name" : "post"}]})
+
+
+ 
